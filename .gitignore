@@ -1,0 +1,29 @@
+venv/
+ .venv/
+
+__pycache__/
+  *.pyc
+*.egg-info/
+
+.vscode/
+.idea/
+
+output/
+build/
+dist/
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+*.log
+
+.env
+.env.local
+
+*.swp
+*.swo
+*~
+
+.DS_Store
+Thumbs.db
