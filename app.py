@@ -9,11 +9,28 @@ SUPPORTED_FORMATS = {"jpg", "jpeg", "png", "webp"}
 # Function to find images in a directory
 def find_image(input_dir: Path):
     for img_path in input_dir.rglob("*"):
-        if img_path.suffix.lower() in SUPPORTED_FORMATS:
+        if img_path.suffix.lower().lstrip(".") in SUPPORTED_FORMATS:
             yield img_path
 
+
 def resize_image(inDir: Path, outDir: Path, width: int):
-    pass
+    img = Image.open(inDir)
+
+    # Original dimensions
+    orig_width, orig_height = img.size
+
+    # Calculate new height to maintain aspect ratio
+    ratio = width / orig_width
+    new_height = int(orig_height * ratio)
+
+    # Resize image
+    img = img.resize((width, new_height), Image.LANCZOS)
+
+    # Make sure output directory exists(if not, create it)
+    outDir.parent.mkdir(parents=True, exist_ok=True)
+    img.save(outDir)
+
+    return orig_width, orig_height, width, new_height
 
 
 def main():
@@ -58,10 +75,13 @@ def main():
         out_path = outDir / rel
 
         print(f"{img_path} -> {out_path}")
+        resize_image(img_path, out_path, args.width)
         found = True
 
     if not found:
         print("No images found in the specified directory")
+
+    print("\nFinished processing images.")
 
 
 if __name__ == "__main__":
